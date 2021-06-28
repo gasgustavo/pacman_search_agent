@@ -61,7 +61,27 @@ class HanoiTowerSearchProblem(search.SearchProblem):
 
         return successors
 
+def draw_hanoi_tower(state):
+    max_columns = max([max(i) for i in state if len(i)])
+    max_rows = max_columns#max([len(i) for i in state])
+    draw = ['#' for i in range(max_rows)]
+    for slot in state:
 
+        slot_size = len(slot)
+
+        for row in range(max_rows):
+
+            if slot_size < (row+1):
+                draw[row] += ' '*max_columns
+            else:
+
+                draw[row] += '-' * slot[row]
+                draw[row] += ' '*(max_columns - slot[row])
+            draw[row] += '#'
+    draw = ['#'*((max_columns+1)*len(state)+1)] + draw
+    draw.reverse()
+    for i in draw:
+        print(i)
 
 
 def createRandomHanoiTower(hanoi_size, slot_size):
@@ -81,14 +101,15 @@ def createRandomHanoiTower(hanoi_size, slot_size):
 
 if __name__ == '__main__':
 
-    problem = HanoiTowerSearchProblem(hanoi_size=5, slot_size=3)
+    problem = HanoiTowerSearchProblem(hanoi_size=6, slot_size=3)
     hanoi_tower = problem.getStartState()
     print('A random hanoi tower: {}'.format('--'.join([str(i) for i in hanoi_tower])))
+    draw_hanoi_tower(hanoi_tower)
     path = search.breadthFirstSearch(problem)
     print('BFS found a path of %d moves: %s' % (len(path), str(path)))
     i = 1
     for action in path:
+        input("Press return for the next state...")   # wait for key stroke
         hanoi_tower[action[1]].append(hanoi_tower[action[0]].pop())
         print('new configuration: {}'.format('--'.join([str(i) for i in hanoi_tower])))
-
-        input("Press return for the next state...")   # wait for key stroke
+        draw_hanoi_tower(hanoi_tower)
