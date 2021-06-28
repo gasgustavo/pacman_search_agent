@@ -89,18 +89,19 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    visited_states = set()
+    visited_states = list()
     states_stack = util.Stack()  # create an empty stack
     actions = []  # At first you didn't move yet
 
     # Initialize
     state = problem.getStartState()
+    print('inicial state: {}'.format(state))
     states_stack.push((state, actions))
     last_action = None
 
     while not problem.isGoalState(state) and not states_stack.isEmpty():
         state, actions = states_stack.pop()
-        visited_states.add(state)
+        visited_states.append(state)
         successor = problem.getSuccessors(state)
 
         for (state, last_action, stepCost) in successor:
@@ -113,7 +114,7 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    visited_states = set()
+    visited_states = list()
     states_queue = util.Queue()  # create an empty Queue
     actions = []  # At first you didn't move yet
 
@@ -127,17 +128,16 @@ def breadthFirstSearch(problem):
         successor = problem.getSuccessors(state)
         for (next_state, last_action, stepCost) in successor:
             if next_state not in visited_states:
-                visited_states.add(next_state)
+                visited_states.append(next_state)
                 states_queue.push((next_state, actions + [last_action]))
 
-    action_list = actions if last_action is None else actions + [last_action]
-    return action_list
+    return actions
+
 
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    visited_states = set()
+    visited_states = list()
     states_queue = util.PriorityQueue()  # create an empty Queue
     actions = []  # At first you didn't move yet
     stepCost = 0
@@ -152,12 +152,11 @@ def uniformCostSearch(problem):
         successor = problem.getSuccessors(state)
         for (next_state, last_action, stepCost) in successor:
             if next_state not in visited_states:
-                visited_states.add(next_state)
+                visited_states.append(next_state)
                 stepCost += last_stepCost
                 states_queue.push((next_state, actions + [last_action], stepCost), stepCost)
 
-    action_list = actions if last_action is None else actions + [last_action]
-    return action_list
+    return actions
 
 
 def nullHeuristic(state, problem=None):
